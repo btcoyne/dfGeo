@@ -15,23 +15,16 @@ export class Geometry {
     return this.points
   }
 
-  print(geotype) {
-    if (geotype.toLowerCase() === "points") {
-      console.log("points");
-      this.points.print();
-    }
-    if (geotype.toLowerCase() === "vertices") {
-      console.log("vertices");
-      this.vertices.print();
-    }
-    if (geotype.toLowerCase() === "primitives") {
-      console.log("primitives");
-      this.primitives.print();
-    }
-    if (geotype.toLowerCase() === "detail") {
-      console.log("detail");
-      this.detail.print();
+  print(geotype=null) {
+    const geotypes = ["points", "vertices", "primitives", "detail"];
+    if (geotype === null) {
+      for (let gt of geotypes) {
+        console.log(gt);
+        this[gt].print();
+      }
+    } else if (geotypes.includes(geotype.toLowerCase())) {
+      console.log(geotype.toLowerCase());
+      this[geotype.toLowerCase()].print();    
     }
   }
-
 }
