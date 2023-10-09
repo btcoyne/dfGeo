@@ -16,5 +16,7 @@ let geo = new Geometry(json_data);
 geo.print("points");
 geo.rotate(Math.PI,0,0);
 geo.print("points");
+geo.scale(10,-1,1);
+geo.print("points");
 
 

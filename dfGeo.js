@@ -9,10 +9,10 @@ export class Geometry {
   }
 
   translate(x=0.0,y=0.0,z=0.0,group=null) {
-    this.points.x = this.points.x.add(x)
-    this.points.y = this.points.y.add(y)
-    this.points.z = this.points.z.add(z)
-    return this.points
+    this.points.x = this.points.x.add(x);
+    this.points.y = this.points.y.add(y);
+    this.points.z = this.points.z.add(z);
+    return this;
   }
 
   //TODO Switch from Euler angles to quaternions/rotors?
@@ -32,6 +32,13 @@ export class Geometry {
     this.points = this.points.apply((col) => { 
       return tf.einsum('ij,jk->ik',thirdRotation,tf.einsum('ij,jk->ik',secondRotation,tf.einsum('ij,jk->ik', firstRotation, tf.tensor(col,[3,1])))).reshape([3]).arraySync()}, {axis : 1});
 
+    return this;
+  }
+
+  scale(x=1,y=1,z=1,group=null) {
+    this.points.x = this.points.x.mul(x);
+    this.points.y = this.points.y.mul(y);
+    this.points.z = this.points.z.mul(z);
     return this;
   }
   
