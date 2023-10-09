@@ -14,5 +14,7 @@ let json_data = [{ x: 0.4612, y: 4.28283, z: -1.509 },
 
 let geo = new Geometry(json_data);
 geo.print("points");
+geo.rotate(Math.PI,0,0);
+geo.print("points");
 
 
