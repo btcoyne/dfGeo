@@ -1,4 +1,6 @@
 const tf = dfd.tensorflow;
+tf.setBackend('cpu');
+
 export class Geometry {
   //TODO: vertices is a list of point indices and should only be able to use actual point numbers
   constructor(points=[],vertices=[],primitives=[],detail=[]) {
@@ -17,7 +19,6 @@ export class Geometry {
 
   //TODO Switch from Euler angles to quaternions/rotors?
   //TODO Move centroid to orgin then rotate then move back?
-  //TODO Use async instead of arraySync for better preformance
   rotate(alpha=0.0, beta=0.0, gamma=0.0,order="rxryrz", group=null) {
     let xAxisRotationMatrix = tf.tensor([[1.0,0.0,0.0],[0.0, Math.cos(alpha), -1.0 * Math.sin(alpha)],[0.0, Math.sin(alpha), Math.cos(alpha)]]);
 
@@ -29,8 +30,13 @@ export class Geometry {
     let secondRotation = yAxisRotationMatrix;
     let thirdRotation = zAxisRotationMatrix;
 
-    this.points = this.points.apply((col) => { 
-      return tf.einsum('ij,jk->ik',thirdRotation,tf.einsum('ij,jk->ik',secondRotation,tf.einsum('ij,jk->ik', firstRotation, tf.tensor(col,[3,1])))).reshape([3]).arraySync()}, {axis : 1});
+    //this.points = this.points.apply((col) => { 
+    //  return tf.einsum('ij,jk->ik',thirdRotation,tf.einsum('ij,jk->ik',secondRotation,tf.einsum('ij,jk->ik', firstRotation, tf.tensor(col,[3,1])))).reshape([3]).arraySync()}, {axis : 1});
+
+
+    this.points = new dfd.DataFrame(tf.einsum('ij,jk->ik',thirdRotation,tf.einsum('ij,jk->ik',secondRotation,tf.einsum('ij,jk->ik',firstRotation,this.points.tensor.transpose()))).transpose(),{columns : ['x','y','z']});
+
+
 
     return this;
   }
